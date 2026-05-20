@@ -1,9 +1,7 @@
 package com.example.autotether
 
 import android.util.Log
-import rikka.shizuku.Shizuku
-import java.io.BufferedReader
-import java.io.InputStreamReader
+import rikka.shizuku.ShizukuRemoteProcess
 
 object ShizukuShell {
 
@@ -11,19 +9,15 @@ object ShizukuShell {
 
         try {
 
-            val process = Shizuku.newProcess(
+            val process = ShizukuRemoteProcess(
                 arrayOf("sh", "-c", cmd),
                 null,
                 null
             )
 
-            val reader = BufferedReader(
-                InputStreamReader(process.inputStream)
-            )
+            process.waitFor()
 
-            val output = reader.readText()
-
-            Log.d("SHIZUKU", output)
+            Log.d("SHIZUKU", "command executed")
 
         } catch (e: Exception) {
 

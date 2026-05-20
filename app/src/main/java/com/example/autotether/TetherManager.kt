@@ -2,7 +2,6 @@ package com.example.autotether
 
 import android.content.Context
 import android.net.ConnectivityManager
-import android.os.Handler
 import android.util.Log
 
 object TetherManager {
@@ -15,14 +14,21 @@ object TetherManager {
                 context.getSystemService(Context.CONNECTIVITY_SERVICE)
                         as ConnectivityManager
 
-            val method =
-                ConnectivityManager::class.java.getDeclaredMethod(
-                    "startTethering",
-                    Int::class.javaPrimitiveType,
-                    Boolean::class.javaPrimitiveType,
-                    ConnectivityManager.OnStartTetheringCallback::class.java,
-                    Handler::class.java
-                )
+            val clazz = Class.forName(
+                "android.net.ConnectivityManager"
+            )
+
+            val callbackClass = Class.forName(
+                "android.net.ConnectivityManager\$OnStartTetheringCallback"
+            )
+
+            val method = clazz.getDeclaredMethod(
+                "startTethering",
+                Int::class.javaPrimitiveType,
+                Boolean::class.javaPrimitiveType,
+                callbackClass,
+                android.os.Handler::class.java
+            )
 
             method.isAccessible = true
 
@@ -30,22 +36,11 @@ object TetherManager {
                 cm,
                 1,
                 false,
-                object : ConnectivityManager.OnStartTetheringCallback() {
-
-                    override fun onTetheringStarted() {
-
-                        Log.d("TETHER", "USB tether started")
-                    }
-
-                    override fun onTetheringFailed() {
-
-                        Log.e("TETHER", "startTethering failed")
-
-                        fallback()
-                    }
-                },
+                null,
                 null
             )
+
+            Log.d("TETHER", "startTethering invoked")
 
         } catch (e: Exception) {
 
