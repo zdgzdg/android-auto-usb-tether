@@ -1,7 +1,6 @@
 package com.example.autotether
 
 import android.util.Log
-import rikka.shizuku.ShizukuRemoteProcess
 
 object ShizukuShell {
 
@@ -9,10 +8,8 @@ object ShizukuShell {
 
         try {
 
-            val process = ShizukuRemoteProcess(
-                arrayOf("sh", "-c", cmd),
-                null,
-                null
+            val process = Runtime.getRuntime().exec(
+                arrayOf("sh", "-c", cmd)
             )
 
             process.waitFor()
