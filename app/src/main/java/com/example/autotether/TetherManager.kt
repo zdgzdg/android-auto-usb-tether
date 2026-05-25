@@ -40,27 +40,11 @@ object TetherManager {
                 null
             )
 
-            Log.d("TETHER", "startTethering invoked")
+            Log.d("TETHER", "USB tether started")
 
         } catch (e: Exception) {
 
             Log.e("TETHER", e.toString())
-
-            fallback()
-        }
-    }
-
-    private fun fallback() {
-
-        try {
-
-            ShizukuShell.exec(
-                "svc usb setFunctions rndis"
-            )
-
-        } catch (e: Exception) {
-
-            Log.e("TETHER", "fallback failed")
         }
     }
 }
